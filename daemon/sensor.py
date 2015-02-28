@@ -33,7 +33,7 @@ class Sensor(object):
         
         
     def connect(self):
-        "Connect to a device and start read data."
+        # Connect to a device and start read data.
 
         client = Client(token=self.token)
         device = client.get_device(id=self.dev_id).get_info()
@@ -47,7 +47,7 @@ class Sensor(object):
         
         
     def disconnect(self):
-        "Disconnect to a device and stop to read data."
+        #Disconnect to a device and stop to read data.
 
         #if not self.conn
             #exit
@@ -58,8 +58,8 @@ class Sensor(object):
     def call(self, first, second):
     #       (self, message, channel): STD
     #       (self, url, message): MQTT
-        "Called when data are recived from sensor."
-        "This function set last value on self.level and add it to self.log list"
+        #Called when data are recived from sensor.
+        #This function set last value on self.level and add it to self.log list
         if self.connType == self.CONNTYPE_STD:
             message = first
             value = json.loads(message)[self.param]

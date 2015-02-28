@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys, time
+import signal
 from daemon import Daemon
 from sensor import Sensor
 
@@ -22,39 +23,42 @@ class RelayrDaemon(Daemon):
         
 
     def add(self, sensor, callback):
-        "Add the sensor to the list"
+        #Add the sensor to the list
         
         sensorEntry = (sensor,callback)
         self.sensors.append(sensorEntry)
         
         
     def connectAll(self):
-        "Connect all sensors added to the daemon"
+        #Connect all sensors added to the daemon
         
         for s in self.sensors:
             s[0].connect()
 
 
     def disconnectAll(self):
-        "Disconnect all sensors added to the daemon"
+        #Disconnect all sensors added to the daemon
         
         for s in self.sensors:
             s[0].disconnect()
         
         
     def run(self):
-        "Every 5 seconds it check the data from the sensor and..."
-        
-        for s in self.sensors:
-            s[1](s[0])
+	while True:
+	    #Every 5 seconds it check the data from the sensor and...
+	    for s in self.sensors:
+		s[1](s[0])
 
-        time.sleep(5);
+	    time.sleep(5);
         
 def printData(sensor):
-    print sensor.name + " - " + sensor.level
+    print sensor.name + " - " + str(sensor.level)
+
+    
 
 if __name__ == "__main__":
     daemon = RelayrDaemon('/tmp/daemon-example.pid')
+
     
     if not daemon.sensors:
         proximity = Sensor("proximity",ACCESS_TOKEN,LIGHT_ID,"prox")
@@ -72,6 +76,18 @@ if __name__ == "__main__":
             daemon.disconnectAll()
         #elif 'restart' == sys.argv[1]:
         #    daemon.restart()
+        elif 'fg' == sys.argv[1]:
+	    def onSignal(signum, frame):
+		print "SIGNAL RECEVIED}\n"
+		daemon.disconnectAll()
+		sys.exit(1)
+
+	    signal.signal(signal.SIGINT, onSignal)
+	    signal.signal(signal.SIGTERM, onSignal)
+
+
+	    daemon.connectAll();
+	    daemon.run();
         else:
             print "Unknown command"
             sys.exit(2)

@@ -53,7 +53,6 @@ class RelayrDaemon(Daemon):
         
 def printData(sensor):
     print sensor.name + " - " + str(sensor.level)
-
     
 
 if __name__ == "__main__":
@@ -62,10 +61,9 @@ if __name__ == "__main__":
     
     if not daemon.sensors:
         proximity = Sensor("proximity",ACCESS_TOKEN,LIGHT_ID,"prox")
-        dishwasher = Sensor("dishwasher",ACCESS_TOKEN,DISHWASHER_ID,"snd_level")
-        dishwasher = Sensor("dishwasher",ACCESS_TOKEN,DISHWASHER_ID,"noiseLevel",Sensor.CONNTYPE_MQTT)
+        mic = Sensor("mic",ACCESS_TOKEN,DISHWASHER_ID,"noiseLevel",Sensor.CONNTYPE_MQTT)
         daemon.add(proximity,printData)
-        daemon.add(dishwasher,printData)
+        daemon.add(mic,printData)
 
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
@@ -93,5 +91,5 @@ if __name__ == "__main__":
             sys.exit(2)
         sys.exit(0)
     else:
-        print "usage: %s start|stop|restart" % sys.argv[0]
+        print "usage: %s start|stop|fg" % sys.argv[0]
         sys.exit(2)

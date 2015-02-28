@@ -8,6 +8,8 @@ import relayr
 import time
 from relayr import Client
 from relayr.dataconnection import MqttStream
+from kryptoncon import KryptonCon
+import time
 
 DO_DBG_RAPI_CONSOLE=False
 DO_DBG_RAPI_LOGFILE=True
@@ -51,6 +53,7 @@ def half_full_trans_fn(state, sensor_val):
     machine = state.machine
     if (sensor_val > FULL_THRLD):
         if state.condition_met_long_enouph():
+            kryptcon.start_msg()
             machine.set_state( machine.full ) 
     else:
         state.reset_state()
@@ -59,6 +62,7 @@ def full_trans_fn(state, sensor_val):
     machine = state.machine
     if (sensor_val < EMPTY_THRLD):
         if state.condition_met_long_enouph():
+            kryptcon.end_msg()
             machine.set_state( machine.empty ) 
     else:
         state.reset_state()
@@ -91,7 +95,8 @@ class State():
 
 
 class TrashMachine():
-    def __init__(self):
+    def __init__(self, kryptcon):
+        self.kryptcon = kryptcon
         self.empty         = State(self, 'empty'      , empty_trans_fn)
         self.half_full     = State(self, 'half_full'  , half_full_trans_fn)
         self.full          = State(self, 'full'       , full_trans_fn)
@@ -129,7 +134,9 @@ def toggle_led_all_devices(relayr_usr):
 
 if __name__ == "__main__":
 
-    trash_machine = TrashMachine()
+    kryptcon = KryptonCon("f4ab513e-590d-494f-8586-2e06af2d186d");
+
+    trash_machine = TrashMachine( kryptcon )
     relayr_client = relayr.Client(token=WG_TOKEN)
     relayr_usr = relayr_client.get_user()
     #list_all_devices(relayr_usr)
@@ -145,5 +152,8 @@ if __name__ == "__main__":
         time.sleep(600)
 
     stream.stop()
+
+    time.sleep(10);
+
 
 

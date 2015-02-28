@@ -20,16 +20,16 @@ class KryptonCon:
 	url=self.server+":"+str(self.port)+url
 	for x in range(0,5):
 	    try:
-		Http().request(url, method="POST", headers=headers, body=json.dumps(data));
-		return
+		return Http().request(url, method="POST", headers=headers, body=json.dumps(data));
 	    except:
 		print("Connection to '"+url+"' refused try: " + str(x))
+	return "ERROR"
 
 
     def start_msg(self, userid=""):
 	url = "/api/events/start"
-	self.req(url,  {'user': userid});
+	return self.req(url,  {'user': userid});
     
     def end_msg(self, userid=""):
 	url = "/api/events/end"
-	self.req(url,  {'user': userid});
+	return self.req(url,  {'user': userid});

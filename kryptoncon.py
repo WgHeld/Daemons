@@ -9,7 +9,7 @@ class KryptonCon:
     port=0
     devid=""
 
-    def __init__(self, devid, server="127.0.0.1", port=3000):
+    def __init__(self, devid, server="https://wgheld-krypto.herokuapp.com", port=443):
 	self.devid = devid
 	self.server = server
 	self.port = port
@@ -17,10 +17,11 @@ class KryptonCon:
     def req(self, url, data):
 	data['device'] = self.devid;
 	headers = {'content-type': 'application/json'}
-	url="http://"+self.server+":"+str(self.port)+url
+	url=self.server+":"+str(self.port)+url
 	for x in range(0,5):
 	    try:
-		Http().request(url, method="GET", headers=headers, body=json.dumps(data));
+		Http().request(url, method="POST", headers=headers, body=json.dumps(data));
+		return
 	    except:
 		print("Connection to '"+url+"' refused try: " + str(x))
 

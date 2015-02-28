@@ -58,16 +58,17 @@ class Sensor(object):
     def call(self, first, second):
     #       (self, message, channel): STD
     #       (self, url, message): MQTT
-        "Called when data are recived from sensor.
+        "Called when data are recived from sensor."
         "This function set last value on self.level and add it to self.log list"
         if self.connType == self.CONNTYPE_STD:
-            message = first                                 #'{"ts":1425146844491,"snd_level":69}'
+            message = first
+            value = json.loads(message)[self.param]
         elif self.connType == self.CONNTYPE_MQTT:
-            message = second                                #'{"deviceId":"89287aad-db10-4303-ad01-5547c67eca96","modelId":"4f38b6c6-a8e9-4f93-91cd-2ac4064b7b5a","readings":[{"meaning":"noiseLevel","value":62,"recorded":1425146898169}],"received":1425146895904}'
-            message_tmp = json.loads(message)['readings']
-            message = message_tmp[0]                        #{u'meaning': u'noiseLevel', u'recorded': 1425146758255, u'value': 167}
-        print repr(message)
-        self.level = json.loads(message)[self.param]
+            message = second
+            for element in json.loads(message)['readings']:
+                if element['meaning'] == self.param:
+                    value = element['value']
+        self.level = value
         logEntry = (self.level,time.time())
         self.log.append(logEntry)
         #debug#print "Recived data from device"
@@ -89,8 +90,8 @@ DISHWASHER_ID  = '89287aad-db10-4303-ad01-5547c67eca96' #to set to 'f4ab513e-590
 
 if __name__ == "__main__":
 #    proximity = Sensor("proximity",ACCESS_TOKEN,LIGHT_ID,"prox")
-#    proximity = Sensor("dishwasher",ACCESS_TOKEN,DISHWASHER_ID,"snd_level")
-    proximity = Sensor("dishwasher",ACCESS_TOKEN,DISHWASHER_ID,"noiseLevel",Sensor.CONNTYPE_MQTT)
+    proximity = Sensor("dishwasher",ACCESS_TOKEN,DISHWASHER_ID,"snd_level")
+#    proximity = Sensor("dishwasher",ACCESS_TOKEN,DISHWASHER_ID,"noiseLevel",Sensor.CONNTYPE_MQTT)
     proximity.connect()
     
     for i in range(1,200):

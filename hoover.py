@@ -28,8 +28,6 @@ HOOVERING=2         # the hoover is running
 
 TOK="Pm8az.iBVc6DBdHI7iKI9KDFu-VdKW4_"
 GYROSCOPE_ID = 'a2e4d803-82d2-4504-add2-8e99111d9178'
-SERVER = "http://192.168.178.115"
-PORT = 3000
 
 """ GLOBAL """
 last_values = [0,0,0]
@@ -105,7 +103,7 @@ if __name__ == "__main__":
     random.seed()
 
     c = Client(token=TOK)
-    con = KryptonCon(GYROSCOPE_ID, SERVER, PORT);
+    con = KryptonCon(GYROSCOPE_ID);
     dev = c.get_device(id=GYROSCOPE_ID)
     stream = MqttStream(mqtt_callback, [dev])
     stream.start()

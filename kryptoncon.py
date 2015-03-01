@@ -3,13 +3,18 @@ from httplib2 import Http
 import time
 from requests.exceptions import ConnectionError
 
+SERVER = "http://192.168.178.115"
+PORT = 3000
+#SERVER = "https://wgheld-krypto.herokuapp.com"
+#PORT = 443
+
 class KryptonCon:
 
     server=""
     port=0
     devid=""
 
-    def __init__(self, devid, server="https://wgheld-krypto.herokuapp.com", port=443):
+    def __init__(self, devid, server=SERVER, port=PORT):
 	self.devid = devid
 	self.server = server
 	self.port = port

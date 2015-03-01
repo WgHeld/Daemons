@@ -66,6 +66,7 @@ def validate_values(v):
     global start_time
 
     if (is_working(last_values, v)):
+        print("moving")
 	last_working = time.time();
 
 	if (state == IDLE):
@@ -76,6 +77,7 @@ def validate_values(v):
 		state = HOOVERING
 		on_start_hoovering()
     else: 
+        print("pausing")
 	if (state != IDLE and time.time() - last_working > DETECT_TIME):
 	    if (state == HOOVERING):
 		on_finished_hoovering()

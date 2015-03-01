@@ -30,11 +30,12 @@ class KryptonCon:
 		print("Connection to '"+url+"' refused try: " + str(x))
 	return "ERROR"
 
-
     def start_msg(self, userid=""):
+        print("sendig start %s"%self.devid)
 	url = "/api/events/start"
 	return self.req(url,  {'user': userid});
     
     def end_msg(self, userid=""):
+        print("sendig end %s"%self.devid)
 	url = "/api/events/end"
 	return self.req(url,  {'user': userid});

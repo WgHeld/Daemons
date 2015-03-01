@@ -134,7 +134,7 @@ def toggle_led_all_devices(relayr_usr):
 
 if __name__ == "__main__":
 
-    kryptcon = KryptonCon("f4ab513e-590d-494f-8586-2e06af2d186d");
+    kryptcon = KryptonCon( LIGHT )
 
     trash_machine = TrashMachine( kryptcon )
     relayr_client = relayr.Client(token=WG_TOKEN)
